@@ -22,6 +22,9 @@ function purgatory:createPlatform(world, x, y, w, h)
     platform.pos = Vector2.new(x, y)
     platform.size = Vector2.new(w, h)
 
+    platform.canLava = true
+    platform.lava = 0
+
     return platform
 end
 
@@ -57,6 +60,10 @@ function purgatory:start(world)
     table.insert(self.platforms, self:createPlatform(world, -MAX_X - 10000, MAX_Y, MAX_X * 5 + 20000, 1000)) -- floor
     table.insert(self.platforms, self:createPlatform(world, -MAX_X - 10000, -MAX_Y, 10000, 10000)) -- left wall
     table.insert(self.platforms, self:createPlatform(world, MAX_X, -MAX_Y, 10000, 10000)) -- right wall
+
+    for _, v in ipairs(self.platforms) do
+        v.canLava = false
+    end
 
     table.insert(self.platforms, rootPlatform)
 
@@ -147,11 +154,13 @@ end
 
 function purgatory:draw(cx, cy)
     for _, platform in ipairs(self.platforms) do
+        love.graphics.setColor(1, 1 + -platform.lava, 1 + -platform.lava, 1)
         love.graphics.rectangle("fill", 
             platform.pos.x - cx + 25, 
             platform.pos.y - cy + 25, 
             platform.size.x, platform.size.y
         )
+        love.graphics.setColor(1,1,1,1)
     end
 
     for _, bread in ipairs(self.bread) do

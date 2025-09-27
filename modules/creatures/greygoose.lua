@@ -67,7 +67,7 @@ end
 
 function greygoose:draw(cx, cy)
     if self.active == false then return end
-    
+
     if self.stunTime > 0 then
         love.graphics.setColor(0.5, 0.5, 0.5, 0.9)
     else

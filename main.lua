@@ -22,7 +22,9 @@ local game = {
     transitionTarget = GAME_STATE.bliss,
     creatures = {
         halt = require("modules.creatures.halt"),
-        greygoose = require("modules.creatures.greygoose")
+        greygoose = require("modules.creatures.greygoose"),
+        lava = require("modules.creatures.lava"),
+        timebombs = require("modules.creatures.timebombs")
     }
 }
 
@@ -39,7 +41,6 @@ function love.load()
     bgQuad = love.graphics.newQuad(0, 0, 200000, 200000, 100, 100)
 
     player:Init(world)
-    
 end
 
 function love.update(dt)
@@ -83,7 +84,7 @@ function love.update(dt)
         purgatory:update(dt, player)
 
         for _, creature in pairs(game.creatures) do
-            creature:update(dt, player)
+            creature:update(dt, player, purgatory)
         end
 
         if purgatory:getRemainingBread() <= 0 then

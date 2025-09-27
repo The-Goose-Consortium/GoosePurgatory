@@ -27,7 +27,7 @@ sacrifice.sacrifices = {
         id = "jumpheight",
         text = "lower your jump height by 10%.",
         run = function (player, game)
-            player.jumpheight = player.jumpheight * 0.9
+            player.jumpHeight = player.jumpHeight * 0.9
         end
     },
     {
@@ -58,6 +58,24 @@ sacrifice.sacrifices = {
         text = "summon GREY_GOOSE.",
         run = function (player, game)
             game.creatures.greygoose.active = true
+        end,
+        reactivatable = false,
+        activated = false
+    },
+    {
+        id = "lava",
+        text = "enable LAVA_PLATFORMS.",
+        run = function (player, game)
+            game.creatures.lava.active = true
+        end,
+        reactivatable = false,
+        activated = false
+    },
+    {
+        id = "timebombs",
+        text = "enable TIMEBOMBS.",
+        run = function (player, game)
+            game.creatures.timebombs.active = true
         end,
         reactivatable = false,
         activated = false
