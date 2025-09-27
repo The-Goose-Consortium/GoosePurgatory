@@ -59,6 +59,22 @@ function purgatory:start(world)
     table.insert(self.platforms, self:createPlatform(world, MAX_X, -MAX_Y, 10000, 10000)) -- right wall
 
     table.insert(self.platforms, rootPlatform)
+
+    self.screen = screen:new()
+    self.timer = textlabel:new("0", 30, "center", "center")
+    self.timer.size = UDim2.new(1,0,0,50)
+
+    self.breadCounter = textlabel:new("0", 20, "left", "center")
+    self.breadCounter.position = UDim2.new(0,0,0,50)
+    self.breadCounter.size = UDim2.new(0.2,0,0,40)
+
+    self.health = textlabel:new("0", 30, "left", "bottom")
+    self.health.anchorpoint = Vector2.new(0,1)
+    self.health.position = UDim2.new(0,0,1,0)
+    self.health.size = UDim2.new(0.4,0,0,40)
+
+
+    self.screen:addelements({self.timer, self.breadCounter, self.health})
     
     for i = 1, 30 do
         local x, y, w, h

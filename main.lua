@@ -19,36 +19,30 @@ local game = {
     timer = 3,
     maxTime = 50,
     state = GAME_STATE.transition,
-    transitionTarget = GAME_STATE.purgatory
+    transitionTarget = GAME_STATE.bliss,
+    creatures = {
+        halt = require("modules.creatures.halt"),
+        greygoose = require("modules.creatures.greygoose")
+    }
 }
 
 function love.load()
     love.window.setMode(800, 600, {resizable = true})
+    biribiri:LoadSprites("img")
+    for _, creature in pairs(game.creatures) do
+        creature:init()
+    end
 
     world = love.physics.newWorld(0, 2000, true)
-    biribiri:LoadSprites("img")
+    
     assets["img/goog.png"]:setWrap("repeat", "repeat")
     bgQuad = love.graphics.newQuad(0, 0, 200000, 200000, 100, 100)
-
-    
-
-    purgatoryScreen = screen:new()
-    purgatoryTimer = textlabel:new("0", 30, "center", "center")
-    purgatoryTimer.size = UDim2.new(1,0,0,50)
-
-    purgatoryBreadCounter = textlabel:new("0", 20, "left", "center")
-    purgatoryBreadCounter.position = UDim2.new(0,0,0,50)
-    purgatoryBreadCounter.size = UDim2.new(0.2,0,0,40)
-
-
-    purgatoryScreen:addelements({purgatoryTimer, purgatoryBreadCounter})
 
     player:Init(world)
     
 end
 
 function love.update(dt)
-
     -- game state handling
 
     if game.state == GAME_STATE.transition then
@@ -58,7 +52,12 @@ function love.update(dt)
             game.state = game.transitionTarget
             if game.state == GAME_STATE.purgatory then
                 game.timer = game.maxTime
+                player:reset()
                 purgatory:start(world)
+
+                for _, creature in ipairs(game.creatures) do
+                    creature:reset()
+                end
             end
 
             if game.state == GAME_STATE.bliss then
@@ -77,10 +76,15 @@ function love.update(dt)
 
         game.timer = game.timer - dt
 
-        purgatoryTimer.text = "time: "..tostring(math.round(game.timer, 0.01))
-        purgatoryBreadCounter.text = "breads: "..tostring(purgatory:getRemainingBread())
+        purgatory.timer.text = "time: "..tostring(math.round(game.timer, 0.01))
+        purgatory.breadCounter.text = "breads: "..tostring(purgatory:getRemainingBread())
+        purgatory.health.text = "health: "..tostring(player.health).."/"..tostring(player.maxHealth)
 
         purgatory:update(dt, player)
+
+        for _, creature in pairs(game.creatures) do
+            creature:update(dt, player)
+        end
 
         if purgatory:getRemainingBread() <= 0 then
             game.state = GAME_STATE.transition
@@ -108,6 +112,9 @@ function love.update(dt)
             local selectedSacrifice = sacrifice.sacrifices[sacrifice.selection]
             
             selectedSacrifice.run(player, game)
+            if selectedSacrifice.reactivatable == false then
+                selectedSacrifice.activated = true
+            end
 
             game.state = GAME_STATE.transition
             game.timer = 3
@@ -123,10 +130,14 @@ function love.draw()
         love.graphics.draw(assets["img/goog.png"], bgQuad, -100000 - player.camera.x / 2, -100000 - player.camera.y / 2)
 
         player:Draw()
-
+        
         purgatory:draw(player.camera.x, player.camera.y)
 
-        purgatoryScreen:draw()
+        for _, creature in pairs(game.creatures) do
+            creature:draw(player.camera.x, player.camera.y)
+        end
+
+        purgatory.screen:draw()
     elseif game.state == GAME_STATE.bliss then
         bliss:draw()
     elseif game.state == GAME_STATE.sacrifice then

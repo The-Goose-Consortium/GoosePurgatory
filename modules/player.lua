@@ -12,6 +12,10 @@ function player:Init(world)
     self.grounded = false
     self.flipped = false
     self.jumpPressed = false
+
+    self.maxHealth = 100
+    self.health = self.maxHealth
+    
     
     self.speed = 6000
     self.jumpHeight = 3500
@@ -84,6 +88,13 @@ function player:Update(dt)
 
     self.camera.x = self.c.x - self.camoffset.x
     self.camera.y = self.c.y - self.camoffset.y
+end
+
+function player:reset()
+    self.body:setLinearVelocity(0,0)
+    self.body:setX(0)
+    self.body:setY(0)
+    self.health = self.maxHealth
 end
 
 function player:Draw()

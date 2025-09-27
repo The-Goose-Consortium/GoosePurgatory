@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-field
 local sacrifice = {}
 
 sacrifice.sacrifices = {
@@ -35,11 +36,32 @@ sacrifice.sacrifices = {
         run = function (player, game)
             player.dashSpeed = player.dashSpeed * 0.9
         end
+    },
+    {
+        id = "health",
+        text = "lower your health by 10%.",
+        run = function (player, game)
+            player.maxHealth = player.maxHealth * 0.9
+        end
+    },
+    {
+        id = "halt",
+        text = "summon HALT.",
+        run = function (player, game)
+            game.creatures.halt.active = true
+        end,
+        reactivatable = false,
+        activated = false
+    },
+    {
+        id = "greygoose",
+        text = "summon GREY_GOOSE.",
+        run = function (player, game)
+            game.creatures.greygoose.active = true
+        end,
+        reactivatable = false,
+        activated = false
     }
-    -- {
-    --     id = "health",
-    --     text = "lower your health by 10%."
-    -- }
 }
 
 function sacrifice:start()
@@ -52,12 +74,16 @@ function sacrifice:start()
     self.selection = -1
     self.selected = false
 
-    local option1 = love.math.random(1, #self.sacrifices)
+    local option1
     local option2
 
     repeat
+        option1 = love.math.random(1, #self.sacrifices)
+    until self.sacrifices[option1].activated ~= true 
+
+    repeat
         option2 = love.math.random(1, #self.sacrifices)
-    until option2 ~= option1
+    until option2 ~= option1 and self.sacrifices[option2].activated ~= true 
 
     self.option1Btn = textlabel:new(self.sacrifices[option1].text, 30, "center", "center")
     self.option1Btn.position = UDim2.new(0, 10, 0.5, 0)
