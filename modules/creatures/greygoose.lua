@@ -62,7 +62,9 @@ function greygoose:reset()
     self.x = 0
     self.y = 0
     self.flipped = false
+    self.stunTime = self.delay
     table.clear(self.recordedPositions)
+    self.recordedPositions = {}
 end
 
 function greygoose:draw(cx, cy)

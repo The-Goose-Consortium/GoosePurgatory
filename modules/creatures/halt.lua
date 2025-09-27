@@ -4,12 +4,15 @@ function halt:init()
     self.active = false
     self.visible = false
     self.timer = 0
-    self.activateTime = 5
+    self.activateTime = 12
     self.sprite = assets["img/halt.png"]
 
     self.x = 0
     self.y = 0
     self.pressingTime = 0.0
+
+    self.maxActivate = 20
+    self.minActivate = 12
 end
 
 function halt:update(dt, player)
@@ -37,7 +40,7 @@ function halt:update(dt, player)
         if self.timer >= self.activateTime + 2 then
             self.visible = false
             self.timer = 0
-            self.activateTime = love.math.random(12,20)
+            self.activateTime = love.math.random(self.minActivate, self.maxActivate)
         end
     end
 end
@@ -45,7 +48,7 @@ end
 function halt:reset()
     self.timer = 0
     self.visible = false
-    self.activateTime = 15
+    self.activateTime = self.minActivate
 end
 
 function halt:draw()

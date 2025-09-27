@@ -16,7 +16,7 @@ local GAME_STATE = {
 
 local game = {
     round = 1,
-    timer = 3,
+    timer = 1,
     maxTime = 50,
     state = GAME_STATE.transition,
     transitionTarget = GAME_STATE.bliss,
@@ -87,9 +87,9 @@ function love.update(dt)
             creature:update(dt, player, purgatory)
         end
 
-        if purgatory:getRemainingBread() <= 0 then
+        if purgatory:getRemainingBread() <= 19 then
             game.state = GAME_STATE.transition
-            game.timer = 3
+            game.timer = 1
             game.transitionTarget = GAME_STATE.bliss
         end
     end

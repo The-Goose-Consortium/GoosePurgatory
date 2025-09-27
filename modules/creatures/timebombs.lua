@@ -6,6 +6,7 @@ function timebombs:init()
     self.timer = 0
     self.activateTime = 3
     self.bombsCreated = false
+    self.radius = 150
 end
 
 function timebombs:update(dt, player, purgatory)
@@ -30,7 +31,7 @@ function timebombs:update(dt, player, purgatory)
 
     if self.timer >= self.activateTime + 3 then
         for _, bomb in ipairs(self.bombs) do
-            if biribiri.distance(bomb.x, bomb.y, player.body:getX(), player.body:getY()) < 150 then
+            if biribiri.distance(bomb.x, bomb.y, player.body:getX(), player.body:getY()) < self.radius then
                 player.health = player.health - 50
             end
         end
@@ -52,7 +53,7 @@ end
 function timebombs:draw(cx, cy)
     for _, bomb in ipairs(self.bombs) do
         love.graphics.draw(assets["img/timebomb_icon.png"], bomb.x - cx - 5, bomb.y - cy - 5, 0, 1, 1, 10, 10)
-        love.graphics.circle("line", bomb.x - cx, bomb.y - cy, 150)
+        love.graphics.circle("line", bomb.x - cx, bomb.y - cy, self.radius)
     end
 end
 

@@ -3,6 +3,7 @@ local lava = {}
 function lava:init()
     self.active = false
     self.dmgTick = 0
+    self.speed = 5
 end
 
 function lava:update(dt, player, purgatory)
@@ -10,7 +11,7 @@ function lava:update(dt, player, purgatory)
 
     for _, platform in ipairs(purgatory.platforms) do
         if #platform.body:getContacts() >= 1 and platform.canLava then
-            platform.lava = math.clamp(platform.lava + dt / 5, 0, 1)
+            platform.lava = math.clamp(platform.lava + dt / self.speed, 0, 1)
 
             if platform.lava >= 0.7 and self.dmgTick <= 0 then
                 self.dmgTick = 0.5

@@ -54,6 +54,15 @@ sacrifice.sacrifices = {
         activated = false
     },
     {
+        id = "oftenhalt",
+        text = "make HALT appear 10% more often.",
+        run = function (player, game)
+            game.creatures.halt.minActivate = game.creatures.halt.minActivate * 0.9
+            game.creatures.halt.maxActivate = game.creatures.halt.maxActivate * 0.9
+        end,
+        requires = "halt"
+    },
+    {
         id = "greygoose",
         text = "summon GREY_GOOSE.",
         run = function (player, game)
@@ -62,6 +71,15 @@ sacrifice.sacrifices = {
         reactivatable = false,
         activated = false
     },
+    {
+        id = "fastergreygoose",
+        text = "make GREY_GOOSE 20% faster.",
+        run = function (player, game)
+            game.creatures.greygoose.delay = game.creatures.greygoose.delay * 0.8
+        end,
+        requires = "greygoose"
+    },
+
     {
         id = "lava",
         text = "enable LAVA_PLATFORMS.",
@@ -72,6 +90,14 @@ sacrifice.sacrifices = {
         activated = false
     },
     {
+        id = "fasterlava",
+        text = "make LAVA_PLATFORMS scorch 20% faster.",
+        run = function (player, game)
+            game.creatures.lava.speed = game.creatures.lava.speed * 0.8
+        end,
+        requires = "lava"
+    },
+    {
         id = "timebombs",
         text = "enable TIMEBOMBS.",
         run = function (player, game)
@@ -79,6 +105,14 @@ sacrifice.sacrifices = {
         end,
         reactivatable = false,
         activated = false
+    },
+    {
+        id = "biggertimebombs",
+        text = "make TIMEBOMBS explode 20% larger.",
+        run = function (player, game)
+            game.creatures.timebombs.radius = game.creatures.timebombs.radius * 1.2
+        end,
+        requires = "timebombs"
     }
 }
 
@@ -94,14 +128,41 @@ function sacrifice:start()
 
     local option1
     local option2
+    
+    local function checkEnabled(id)
+        for _, v in ipairs(self.sacrifices) do
+            if v.id == id and v.activated == true then
+                return true
+            end
+        end
+        return false
+    end
+    
+    local valid1 = false
+    local valid2 = false
 
     repeat
         option1 = love.math.random(1, #self.sacrifices)
-    until self.sacrifices[option1].activated ~= true 
+        if self.sacrifices[option1].requires == nil then
+            valid1 = true
+        else
+            valid1 = checkEnabled(self.sacrifices[option1].requires)
+        end
 
+        print(self.sacrifices[option1].requires)
+        print(valid1)
+    until self.sacrifices[option1].activated ~= true and valid1
     repeat
         option2 = love.math.random(1, #self.sacrifices)
-    until option2 ~= option1 and self.sacrifices[option2].activated ~= true 
+        if self.sacrifices[option2].requires == nil then
+            valid2 = true
+        else
+            valid2 = checkEnabled(self.sacrifices[option2].requires)
+        end
+
+        print(self.sacrifices[option2].requires)
+        print(valid2)
+    until option2 ~= option1 and self.sacrifices[option2].activated ~= true and valid2
 
     self.option1Btn = textlabel:new(self.sacrifices[option1].text, 30, "center", "center")
     self.option1Btn.position = UDim2.new(0, 10, 0.5, 0)
