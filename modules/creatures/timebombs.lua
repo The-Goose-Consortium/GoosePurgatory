@@ -4,7 +4,7 @@ function timebombs:init()
     self.active = false
     self.bombs = {}
     self.timer = 0
-    self.activateTime = 3
+    self.activateTime = 8
     self.bombsCreated = false
     self.radius = 150
 

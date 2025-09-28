@@ -1,10 +1,10 @@
 local halt = {}
 
 function halt:init()
-    self.active = true
+    self.active = false
     self.visible = false
     self.timer = 0
-    self.activateTime = 1
+    self.activateTime = 12
     self.sprite = assets["img/halt.png"]
 
     self.x = 0

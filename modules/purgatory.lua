@@ -118,12 +118,20 @@ function purgatory:start(world)
     self.floor.backgroundcolor = Color.new(0,0,0,0)
     self.floor.textcolor = Color.new(1,1,1,1)
 
+    self.tutorial = textlabel:new("A/D -> RUN \nSPACE -> JUMP/WALL JUMP\nSHIFT -> DASH", 40, "right", "bottom")
+    self.tutorial.position = UDim2.new(1,-10,1,-10)
+    self.tutorial.anchorpoint = Vector2.new(1,1)
+    self.tutorial.size = UDim2.new(1,0,1,0)
+    self.tutorial.backgroundcolor = Color.new(0,0,0,0)
+    self.tutorial.textcolor = Color.new(1,1,1,1)
+
     self.timeDmgTimer = 0
     self.overtime = false
 
-    self.screen:addelements({self.timer, self.breadCounter, self.health, self.floor})
+    self.screen:addelements({self.timer, self.breadCounter, self.health, self.floor, self.tutorial})
 
     self.bgOffset = 0
+    self.tutorialTimer = 15
     
     for i = 1, 30 do
         local x, y, w, h
@@ -212,6 +220,10 @@ function purgatory:update(dt, player)
         end
         self.breadTimer = 0
     end
+
+    self.tutorialTimer = self.tutorialTimer - dt
+    
+    self.tutorial.textcolor = Color.new(1,1,1,math.clamp(self.tutorialTimer, 0, 1))
 
     if self.overtime then
         self.timeDmgTimer = self.timeDmgTimer + dt

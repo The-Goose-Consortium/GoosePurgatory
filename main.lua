@@ -29,7 +29,8 @@ local game = {
         greygoose = require("modules.creatures.greygoose"),
         lava = require("modules.creatures.lava"),
         timebombs = require("modules.creatures.timebombs")
-    }
+    },
+    currentTutorial = "A/D -> RUN \nSPACE -> JUMP/WALL JUMP\nSHIFT -> DASH"
 }
 
 function love.load()
@@ -67,9 +68,10 @@ function reset()
     player.dashSpeed = 2000
     player.maxDashCooldown = 1
     player.dashCooldown = 0
-
+    game.currentTutorial = "A/D -> RUN \nSPACE -> JUMP/WALL JUMP\nSHIFT -> DASH"
     game.state = GAME_STATE.transition
     game.transitionTarget = GAME_STATE.purgatory
+    
 end
 
 function love.update(dt)
@@ -131,7 +133,7 @@ function love.update(dt)
         purgatory.health.text = tostring(player.health).."/"..tostring(player.maxHealth).."HP"
         purgatory.floor.text = "FLOOR_"..tostring(game.floor)
         purgatory:update(dt, player)
-
+        purgatory.tutorial.text = game.currentTutorial
         
 
 
@@ -139,7 +141,8 @@ function love.update(dt)
             creature:update(dt, player, purgatory)
         end
 
-        if purgatory:getRemainingBread() <= 0 then
+        if purgatory:getRemainingBread() <= 18 then
+            game.currentTutorial = ""
             game.state = GAME_STATE.transition
             game.timer = 1
             game.transitionTarget = GAME_STATE.bliss

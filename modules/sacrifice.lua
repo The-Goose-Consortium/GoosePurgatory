@@ -41,7 +41,7 @@ sacrifice.sacrifices = {
         id = "health",
         text = "lower your health by 10%.",
         run = function (player, game)
-            player.maxHealth = player.maxHealth * 0.9
+            player.maxHealth = math.floor(player.maxHealth * 0.9)
         end
     },
     {
@@ -49,6 +49,7 @@ sacrifice.sacrifices = {
         text = "summon HALT.",
         run = function (player, game)
             game.creatures.halt.active = true
+            game.currentTutorial = "HALT:\nwhen the hand appears,\nREFRAIN FROM MOVING."
         end,
         reactivatable = false,
         activated = false
@@ -67,6 +68,7 @@ sacrifice.sacrifices = {
         text = "summon GREY_GOOSE.",
         run = function (player, game)
             game.creatures.greygoose.active = true
+            game.currentTutorial = "GREY_GOOSE:\nit follows your path,\nREFRAIN FROM MAKING CONTACT."
         end,
         reactivatable = false,
         activated = false
@@ -85,6 +87,7 @@ sacrifice.sacrifices = {
         text = "enable LAVA_PLATFORMS.",
         run = function (player, game)
             game.creatures.lava.active = true
+            game.currentTutorial = "LAVA_PLATFORMS:\nkeep moving\nPLATFORMS SCORCH UNDER YOUR FEET."
         end,
         reactivatable = false,
         activated = false
@@ -102,6 +105,7 @@ sacrifice.sacrifices = {
         text = "enable TIMEBOMBS.",
         run = function (player, game)
             game.creatures.timebombs.active = true
+            game.currentTutorial = "TIMEBOMBS:\navoid them,\nBEFORE THEY DETONATE."
         end,
         reactivatable = false,
         activated = false
