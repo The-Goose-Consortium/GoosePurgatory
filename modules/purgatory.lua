@@ -8,6 +8,7 @@ function purgatory:createBread(x, y)
     bread.x = x
     bread.y = y
     bread.collected = false
+    
 
     return bread
 end
@@ -54,6 +55,29 @@ function purgatory:start(world)
     self.platforms = {}
     self.bread = {}
 
+    self.breadSpritesheet = assets["img/bread.png"]
+    self.breadQuads = {}
+
+    local w, h = 51, 50
+
+    for y = 0, self.breadSpritesheet:getHeight() - h, h do
+        for x = 0, self.breadSpritesheet:getWidth(), w do
+            table.insert(self.breadQuads, love.graphics.newQuad(x, y, w, h, self.breadSpritesheet:getDimensions()))
+        end
+    end
+
+    self.breadFrame = 1
+    self.breadTimer = 0
+
+    self.clockSpritesheet = assets["img/clock.png"]
+    self.clockQuads = {}
+
+    for y = 0, self.clockSpritesheet:getHeight() - h, h do
+        for x = 0, self.clockSpritesheet:getWidth(), w do
+            table.insert(self.clockQuads, love.graphics.newQuad(x, y, w, h, self.clockSpritesheet:getDimensions()))
+        end
+    end
+
     local rootPlatform = self:createPlatform(world, -200, 200, 400, 150)
 
     table.insert(self.platforms, self:createPlatform(world, -MAX_X - 10000, -MAX_Y - 1000, MAX_X * 5 + 20000, 1000)) -- roof
@@ -68,21 +92,31 @@ function purgatory:start(world)
     table.insert(self.platforms, rootPlatform)
 
     self.screen = screen:new()
-    self.timer = textlabel:new("0", 30, "center", "center")
-    self.timer.size = UDim2.new(1,0,0,50)
+    self.timer = textlabel:new("0", 100, "left", "center")
+    self.timer.size = UDim2.new(1,0,0,100)
+    self.timer.backgroundcolor = Color.new(0,0,0,0)
+    self.timer.position = UDim2.new(0,115,0,10)
+    self.timer.textcolor = Color.new(1,1,1,1)
 
-    self.breadCounter = textlabel:new("0", 20, "left", "center")
-    self.breadCounter.position = UDim2.new(0,0,0,50)
-    self.breadCounter.size = UDim2.new(0.2,0,0,40)
+    self.breadCounter = textlabel:new("0", 50, "left", "center")
+    self.breadCounter.position = UDim2.new(0,75,0,120)
+    self.breadCounter.size = UDim2.new(1,0,0,50)
+    self.breadCounter.backgroundcolor = Color.new(0,0,0,0)
+    self.breadCounter.textcolor = Color.new(1,1,1,1)
 
-    self.health = textlabel:new("0", 30, "left", "bottom")
+    self.health = textlabel:new("0", 50, "left", "center")
     self.health.anchorpoint = Vector2.new(0,1)
-    self.health.position = UDim2.new(0,0,1,0)
+    self.health.position = UDim2.new(0,75,1,-10)
     self.health.size = UDim2.new(0.4,0,0,40)
+    self.health.backgroundcolor = Color.new(0,0,0,0)
+    self.health.textcolor = Color.new(1,0,0,1)
 
-    self.floor = textlabel:new("0", 15, "left", "center")
-    self.floor.position = UDim2.new(0,0,0,90)
-    self.floor.size = UDim2.new(0.1,0,0,40)
+
+    self.floor = textlabel:new("0", 50, "left", "center")
+    self.floor.position = UDim2.new(0,75,0,180)
+    self.floor.size = UDim2.new(1,0,0,50)
+    self.floor.backgroundcolor = Color.new(0,0,0,0)
+    self.floor.textcolor = Color.new(1,1,1,1)
 
 
     self.screen:addelements({self.timer, self.breadCounter, self.health, self.floor})
@@ -161,6 +195,16 @@ function purgatory:update(dt, player)
     if self.bgOffset >= 400 then
         self.bgOffset = 0
     end
+
+    self.breadTimer = self.breadTimer + dt
+
+    if self.breadTimer >= 0.1 then
+        self.breadFrame = self.breadFrame + 1
+        if self.breadFrame == 14 then
+            self.breadFrame = 1
+        end
+        self.breadTimer = 0
+    end
 end
 
 function purgatory:draw(cx, cy)
@@ -193,9 +237,14 @@ function purgatory:draw(cx, cy)
 
     for _, bread in ipairs(self.bread) do
         if not bread.collected then
-            love.graphics.draw(assets["img/meowsynthcat.png"], bread.x - cx + 25, bread.y - cy + 25)
+            love.graphics.draw(self.breadSpritesheet, self.breadQuads[self.breadFrame], bread.x - cx + 25, bread.y - cy + 25)
         end
     end
+
+    love.graphics.draw(self.clockSpritesheet, self.clockQuads[self.breadFrame], 0, 10, 0, 2, 2)
+    love.graphics.draw(self.breadSpritesheet, self.breadQuads[self.breadFrame], 10, 120, 0, 1, 1)
+    love.graphics.draw(assets["img/floor.png"], 10, 180)
+    love.graphics.draw(assets["img/heart.png"], self.breadQuads[self.breadFrame], 10, love.graphics.getHeight() - 60, 0, 1, 1)
 end
 
 return purgatory

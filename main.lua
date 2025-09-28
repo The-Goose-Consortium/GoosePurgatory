@@ -111,10 +111,14 @@ function love.update(dt)
 
         game.timer = game.timer - dt
 
-        purgatory.timer.text = "time: "..tostring(math.round(game.timer, 0.01))
-        purgatory.breadCounter.text = "breads: "..tostring(purgatory:getRemainingBread())
-        purgatory.health.text = "health: "..tostring(player.health).."/"..tostring(player.maxHealth)
-        purgatory.floor.text = "floor: "..tostring(game.floor)
+        local seconds = math.floor(game.timer)
+        local msnum = math.round(game.timer, 0.1) - seconds
+        ms = string.sub(msnum, 3,3)
+        if ms == "" then ms = "0" end
+        purgatory.timer.text = tostring(seconds).."."..ms
+        purgatory.breadCounter.text = tostring(purgatory:getRemainingBread()).." remaining"
+        purgatory.health.text = tostring(player.health).."/"..tostring(player.maxHealth).."HP"
+        purgatory.floor.text = "FLOOR_"..tostring(game.floor)
         purgatory:update(dt, player)
 
         for _, creature in pairs(game.creatures) do

@@ -1,14 +1,15 @@
 local halt = {}
 
 function halt:init()
-    self.active = false
+    self.active = true
     self.visible = false
     self.timer = 0
-    self.activateTime = 12
+    self.activateTime = 1
     self.sprite = assets["img/halt.png"]
 
     self.x = 0
     self.y = 0
+    self.mod = 0
     self.pressingTime = 0.0
 
     self.maxActivate = 20
@@ -19,28 +20,28 @@ function halt:update(dt, player)
     if not self.active then return end
 
     self.timer = self.timer + dt
+    self.mod = self.mod + dt * 10
 
     if self.timer >= self.activateTime then
-        if not self.visible then
-            self.x = love.math.random(10, love.graphics.getWidth() - love.graphics.getWidth() / 700 - 10)
-            self.y = love.math.random(10, love.graphics.getHeight() - love.graphics.getWidth() / 700 - 10)
-        end
-
         self.visible = true
         
+        self.x = player.body:getX() + math.sin(self.mod) * self.pressingTime * 60
+        self.y = player.body:getY() + math.cos(self.mod) * self.pressingTime * 60
+
         if love.keyboard.isDown("a") or love.keyboard.isDown("d") or love.keyboard.isDown("space") then
             self.pressingTime = self.pressingTime + dt
         end
 
-        if self.pressingTime >= 0.5 then
+        if self.pressingTime >= 1 then
             player.health = player.health - 50
             self.timer = 10000
         end
 
-        if self.timer >= self.activateTime + 2 then
+        if self.timer >= self.activateTime + 3 then
             self.visible = false
             self.timer = 0
             self.activateTime = love.math.random(self.minActivate, self.maxActivate)
+            self.pressingTime = 0
         end
     end
 end
@@ -51,9 +52,11 @@ function halt:reset()
     self.activateTime = self.minActivate
 end
 
-function halt:draw()
+function halt:draw(cx, cy)
     if self.visible then
-        love.graphics.draw(self.sprite, self.x, self.y, 0, love.graphics.getWidth() / 700, love.graphics.getWidth() / 700)
+        love.graphics.setColor(1,1,1, math.clamp(self.pressingTime, 0, 1))
+        love.graphics.draw(self.sprite, self.x - cx - 25, self.y - cy - 25, 0, 1, 1)
+        love.graphics.setColor(1,1,1,1)
     end
 end
 
