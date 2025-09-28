@@ -166,7 +166,7 @@ function sacrifice:start()
         print(valid2)
     until option2 ~= option1 and self.sacrifices[option2].activated ~= true and valid2
 
-    self.option1Btn = textlabel:new(self.sacrifices[option1].text, 30, "center", "center")
+    self.option1Btn = textlabel:new(self.sacrifices[option1].text, 50, "center", "center")
     self.option1Btn.position = UDim2.new(0, 10, 0.5, 0)
     self.option1Btn.size = UDim2.new(0.5, -100, 0.3, 0)
     self.option1Btn.anchorpoint = Vector2.new(0,0.5)
@@ -178,7 +178,15 @@ function sacrifice:start()
         self.selected = true 
     end
 
-    self.option2Btn = textlabel:new(self.sacrifices[option2].text, 30, "center", "center")
+    self.option1Btn.mouseenter = function ()
+        self.option1Btn.textcolor = Color.new(0.6,0,0,1)
+    end
+
+    self.option1Btn.mouseexit = function ()
+        self.option1Btn.textcolor = Color.new(1,0,0,1)
+    end
+
+    self.option2Btn = textlabel:new(self.sacrifices[option2].text, 50, "center", "center")
     self.option2Btn.position = UDim2.new(1, -10, 0.5, 0)
     self.option2Btn.size = UDim2.new(0.5, -100, 0.3, 0)
     self.option2Btn.anchorpoint = Vector2.new(1,0.5)
@@ -188,6 +196,14 @@ function sacrifice:start()
     self.option2Btn.mousebutton1up = function ()
         self.selection = option2
         self.selected = true
+    end
+
+    self.option2Btn.mouseenter = function ()
+        self.option2Btn.textcolor = Color.new(0.6,0,0,1)
+    end
+
+    self.option2Btn.mouseexit = function ()
+        self.option2Btn.textcolor = Color.new(1,0,0,1)
     end
 
     self.screen:addelements({self.option1Btn, self.option2Btn})

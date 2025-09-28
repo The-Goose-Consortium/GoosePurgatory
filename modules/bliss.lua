@@ -7,18 +7,26 @@ function bliss:start()
     self.selection = false
     self.selected = false
 
-    self.escapeBtn = textlabel:new("escape the purgatory.", 30, "center", "center")
+    self.escapeBtn = textlabel:new("escape the purgatory.", 50, "center", "center")
     self.escapeBtn.position = UDim2.new(0, 10, 0.5, 0)
     self.escapeBtn.size = UDim2.new(0.5, -100, 0.3, 0)
     self.escapeBtn.anchorpoint = Vector2.new(0,0.5)
     self.escapeBtn.backgroundcolor = Color.new(0,0,0,0)
     self.escapeBtn.textcolor = Color.new(1,1,1,1)
 
+    self.escapeBtn.mouseenter = function ()
+        self.escapeBtn.textcolor = Color.new(0.6,0.6,1,1)
+    end
+
+    self.escapeBtn.mouseexit = function ()
+        self.escapeBtn.textcolor = Color.new(1,1,1,1)
+    end
+
     self.escapeBtn.mousebutton1up = function ()
         self.selected = true
     end
 
-    self.continueBtn = textlabel:new("continue your suffering.", 30, "center", "center")
+    self.continueBtn = textlabel:new("continue your suffering.", 50, "center", "center")
     self.continueBtn.position = UDim2.new(1,-10, 0.5, 0)
     self.continueBtn.size = UDim2.new(0.5, -100, 0.3, 0)
     self.continueBtn.anchorpoint = Vector2.new(1,0.5)
@@ -28,6 +36,15 @@ function bliss:start()
     self.continueBtn.mousebutton1up = function ()
         self.selection = true
         self.selected = true
+    end
+
+
+    self.continueBtn.mouseenter = function ()
+        self.continueBtn.textcolor = Color.new(1,0.4,0.4,1)
+    end
+
+    self.continueBtn.mouseexit = function ()
+        self.continueBtn.textcolor = Color.new(1,1,1,1)
     end
 
     self.screen:addelements({self.escapeBtn, self.continueBtn})

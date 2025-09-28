@@ -67,8 +67,6 @@ function reset()
     player.maxDashCooldown = 1
     player.dashCooldown = 0
 
-    print("are we doing anything at all???")
-
     game.state = GAME_STATE.transition
     game.transitionTarget = GAME_STATE.purgatory
 end
@@ -115,17 +113,32 @@ function love.update(dt)
         local msnum = math.round(game.timer, 0.1) - seconds
         ms = string.sub(msnum, 3,3)
         if ms == "" then ms = "0" end
+
+        if game.timer < 0 then
+            purgatory.timer.textcolor = Color.new(1,0,0,1)
+            purgatory.overtime = true
+            msnum = 1 + -msnum
+            ms = string.sub(msnum, 3,3)
+            if ms == "" then ms = "0" end
+        else
+            purgatory.timer.textcolor = Color.new(1,1,1,1)
+            purgatory.overtime = false
+        end
+
         purgatory.timer.text = tostring(seconds).."."..ms
         purgatory.breadCounter.text = tostring(purgatory:getRemainingBread()).." remaining"
         purgatory.health.text = tostring(player.health).."/"..tostring(player.maxHealth).."HP"
         purgatory.floor.text = "FLOOR_"..tostring(game.floor)
         purgatory:update(dt, player)
 
+        
+
+
         for _, creature in pairs(game.creatures) do
             creature:update(dt, player, purgatory)
         end
 
-        if purgatory:getRemainingBread() <= 0 then
+        if purgatory:getRemainingBread() <= 18 then
             game.state = GAME_STATE.transition
             game.timer = 1
             game.transitionTarget = GAME_STATE.bliss
@@ -171,7 +184,7 @@ function love.update(dt)
     end
 
     if game.state == GAME_STATE.freedom then
-        freedom:update()
+        freedom:update(dt)
 
         if freedom.selected then
             if freedom.selection then

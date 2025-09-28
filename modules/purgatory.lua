@@ -118,6 +118,8 @@ function purgatory:start(world)
     self.floor.backgroundcolor = Color.new(0,0,0,0)
     self.floor.textcolor = Color.new(1,1,1,1)
 
+    self.timeDmgTimer = 0
+    self.overtime = false
 
     self.screen:addelements({self.timer, self.breadCounter, self.health, self.floor})
 
@@ -208,6 +210,15 @@ function purgatory:update(dt, player)
             self.breadFrame = 1
         end
         self.breadTimer = 0
+    end
+
+    if self.overtime then
+        self.timeDmgTimer = self.timeDmgTimer + dt
+
+        if self.timeDmgTimer >= 1 then
+            self.timeDmgTimer = 0
+            player.health = player.health - 2
+        end
     end
 end
 

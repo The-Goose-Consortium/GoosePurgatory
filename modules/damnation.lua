@@ -16,11 +16,12 @@ function damnation:start(score, x, y)
     self.score.size = UDim2.new(1,0,0,50)
     self.score.backgroundcolor = Color.new(0,0,0,0)
 
-    self.title = textlabel:new("you have ceased to exist.", 50, "center", "center")
-    self.title.size = UDim2.new(1,0,0,70)
+    self.title = textlabel:new("you have ceased to exist.", 90, "center", "center")
+    self.title.size = UDim2.new(1,0,0,90)
+    self.title.position = UDim2.new(0,0,0,20)
     self.title.backgroundcolor = Color.new(0,0,0,0)
 
-    self.leaveBtn = textlabel:new("quit.", 30, "center", "center")
+    self.leaveBtn = textlabel:new("quit.", 60, "center", "center")
     self.leaveBtn.position = UDim2.new(0, 10, 0.5, 0)
     self.leaveBtn.size = UDim2.new(0.5, -100, 0.3, 0)
     self.leaveBtn.anchorpoint = Vector2.new(0,0.5)
@@ -31,7 +32,7 @@ function damnation:start(score, x, y)
         self.selected = true
     end
 
-    self.retryBtn = textlabel:new("redeem yourself.", 30, "center", "center")
+    self.retryBtn = textlabel:new("redeem yourself.", 60, "center", "center")
     self.retryBtn.position = UDim2.new(1,-10, 0.5, 0)
     self.retryBtn.size = UDim2.new(0.5, -100, 0.3, 0)
     self.retryBtn.anchorpoint = Vector2.new(1,0.5)
@@ -43,10 +44,34 @@ function damnation:start(score, x, y)
         self.selected = true
     end
 
+    self.spritesheet = assets["img/damnation.png"]
+    assets["img/damnation.png"]:setFilter("linear", "nearest")
+    self.quads = {}
+
+    local w, h = 201, 150
+
+    for y = 0, self.spritesheet:getHeight() - h, h do
+        for x = 0, self.spritesheet:getWidth(), w do
+            table.insert(self.quads, love.graphics.newQuad(x, y, w, h, self.spritesheet:getDimensions()))
+        end
+    end
+
+    self.frame = 1
+    self.frameTimer = 0
+
     self.screen:addelements({self.score, self.title, self.retryBtn, self.leaveBtn})
 end 
 
 function damnation:update(dt)
+    self.frameTimer = self.frameTimer + dt
+    if self.frameTimer >= 0.2 then
+        self.frame = self.frame + 1
+        self.frameTimer = 0
+        if self.frame == 4 then
+            self.frame = 1
+        end
+    end
+
     self.screen:update()
 
     self.fadeTimer = self.fadeTimer + dt
@@ -55,16 +80,27 @@ function damnation:update(dt)
         self.fading = math.clamp(self.fading + dt / 3, 0, 1)
     end
 
-    self.leaveBtn.textcolor = Color.new(1,1,1,self.fading)
-    self.retryBtn.textcolor = Color.new(1,1,1,self.fading)
+    if self.leaveBtn._hovered then
+        self.leaveBtn.textcolor = Color.new(.6,.6,.6,self.fading)
+    else
+        self.leaveBtn.textcolor = Color.new(1,1,1,self.fading)
+    end
+    
+    if self.retryBtn._hovered then
+        self.retryBtn.textcolor = Color.new(.6,.6,.6,self.fading)
+    else
+        self.retryBtn.textcolor = Color.new(1,1,1,self.fading)
+    end
     self.score.textcolor = Color.new(1,1,1,self.fading)
     self.title.textcolor = Color.new(1,1,1,self.fading)
 end
 
 function damnation:draw()
-    love.graphics.setBackgroundColor(0.2,0,0,1)
+    
 
     love.graphics.setColor(1,1,1, self.fading)
+
+    love.graphics.draw(self.spritesheet, self.quads[self.frame], 0, 0, 0, love.graphics.getWidth() / 200, love.graphics.getHeight() / 150)
 
     self.screen:draw()
 
