@@ -1,6 +1,7 @@
 local greygoose = {}
 
 function greygoose:init()
+    print("reset")
     self.active = false
     self.sprite = assets["img/enemy.png"]
     self.recordedPositions = {}

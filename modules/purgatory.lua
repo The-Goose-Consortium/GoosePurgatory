@@ -80,8 +80,12 @@ function purgatory:start(world)
     self.health.position = UDim2.new(0,0,1,0)
     self.health.size = UDim2.new(0.4,0,0,40)
 
+    self.floor = textlabel:new("0", 15, "left", "center")
+    self.floor.position = UDim2.new(0,0,0,90)
+    self.floor.size = UDim2.new(0.1,0,0,40)
 
-    self.screen:addelements({self.timer, self.breadCounter, self.health})
+
+    self.screen:addelements({self.timer, self.breadCounter, self.health, self.floor})
     
     for i = 1, 30 do
         local x, y, w, h
@@ -153,6 +157,8 @@ function purgatory:update(dt, player)
 end
 
 function purgatory:draw(cx, cy)
+    love.graphics.setBackgroundColor(0,0,0,1)
+
     for _, platform in ipairs(self.platforms) do
         love.graphics.setColor(1, 1 + -platform.lava, 1 + -platform.lava, 1)
         love.graphics.rectangle("fill", 

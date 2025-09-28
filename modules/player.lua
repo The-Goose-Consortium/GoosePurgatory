@@ -64,6 +64,10 @@ function player:Update(dt)
         self.jumpPressed = false
     end
 
+    if love.keyboard.isDown("t") then
+        self.health = self.health - 1
+    end
+
     if love.keyboard.isDown("lshift") and self.dashCooldown <= 0 then
         local dashDir = {x = 0, y = 0}
 

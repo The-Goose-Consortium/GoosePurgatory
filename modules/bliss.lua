@@ -39,6 +39,7 @@ function bliss:update(dt)
 end
 
 function bliss:draw()
+    love.graphics.setBackgroundColor(0,0,0,1)
     love.graphics.draw(assets["img/player.png"], love.graphics.getWidth() / 2, love.graphics.getHeight() / 2 + math.sin(self.gooseSin) * 50, math.sin(self.gooseSin / 2) / 10, 2, 2, 25, 25)
 
     self.screen:draw()
