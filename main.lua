@@ -34,7 +34,10 @@ local game = {
 }
 
 function love.load()
-    love.window.setMode(800, 600, {resizable = true})
+    love.window.setMode(1200, 900, {resizable = true})
+    love.window.setTitle("GOOSE_PURGATORY")
+    love.window.setIcon(love.image.newImageData("img/player.png"))
+
     biribiri:LoadSprites("img")
     biribiri:LoadAudio("audio", "static")
     for _, creature in pairs(game.creatures) do
@@ -150,7 +153,7 @@ function love.update(dt)
             creature:update(dt, player, purgatory)
         end
 
-        if purgatory:getRemainingBread() <= 18 then
+        if purgatory:getRemainingBread() <= 0 then
             game.currentTutorial = ""
             game.state = GAME_STATE.transition
             game.timer = 2.4
