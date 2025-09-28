@@ -1,7 +1,7 @@
 local greygoose = {}
 
 function greygoose:init()
-    self.active = true
+    self.active = false
     self.recordedPositions = {}
     self.time = 0
     self.delay = 2

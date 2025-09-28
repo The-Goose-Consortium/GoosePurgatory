@@ -8,7 +8,7 @@ function purgatory:createBread(x, y)
     bread.x = x
     bread.y = y
     bread.collected = false
-    
+    bread.collectionFade = 0.0
 
     return bread
 end
@@ -189,6 +189,10 @@ function purgatory:update(dt, player)
         if biribiri.collision(player.body:getX() - 35, player.body:getY() - 35, 70, 70, bread.x, bread.y, 50, 50) then
             bread.collected = true
         end
+
+        if bread.collected then
+            bread.collectionFade = math.clamp(bread.collectionFade + dt * 2, 0, 1)
+        end
     end
 
     self.bgOffset = self.bgOffset + dt * 60
@@ -228,9 +232,6 @@ function purgatory:draw(cx, cy)
                 platform.size.x, platform.size.y
             )
         end
-        
-
-       
 
         love.graphics.setColor(1,1,1,1)
     end
@@ -238,6 +239,10 @@ function purgatory:draw(cx, cy)
     for _, bread in ipairs(self.bread) do
         if not bread.collected then
             love.graphics.draw(self.breadSpritesheet, self.breadQuads[self.breadFrame], bread.x - cx + 25, bread.y - cy + 25)
+        else
+            love.graphics.setColor(1,1,1,1 + -bread.collectionFade)
+            love.graphics.draw(self.breadSpritesheet, self.breadQuads[self.breadFrame], bread.x - cx + 50, bread.y - cy + 50, 0, 1 + bread.collectionFade, 1 + bread.collectionFade, 25, 25)
+            love.graphics.setColor(1,1,1,1)
         end
     end
 

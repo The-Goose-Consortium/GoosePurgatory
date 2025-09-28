@@ -47,6 +47,9 @@ function player:Init(world)
 
     self.runFrameTimer = 0
     self.dashFrameTimer = 0
+
+    self.dmgOverlay = 0.0
+    self.lastDmg = self.maxHealth
 end
 
 local DASH_DIRECTIONS = {
@@ -57,6 +60,10 @@ local DASH_DIRECTIONS = {
 }
 
 function player:Update(dt)
+    if self.health ~= self.lastDmg then
+        self.dmgOverlay = 1.0
+    end
+
     if #self.body:getContacts() >= 1 then
         self.grounded = true
     else
@@ -151,6 +158,9 @@ function player:Update(dt)
     if self.dashFrameTimer <= 0 then
         self.dashing = -1
     end
+    
+    self.dmgOverlay = math.clamp(self.dmgOverlay - dt * 3, 0, 1)
+    self.lastDmg = self.health
 end
 
 function player:reset()
@@ -158,6 +168,7 @@ function player:reset()
     self.body:setX(0)
     self.body:setY(0)
     self.health = self.maxHealth
+    self.lastDmg = self.maxHealth
 end
 
 function player:Draw()

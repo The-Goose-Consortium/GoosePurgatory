@@ -223,6 +223,10 @@ function love.draw()
         end
 
         purgatory.screen:draw()
+
+        love.graphics.setColor(1,1,1,player.dmgOverlay)
+        love.graphics.draw(assets["img/damage_overlay.png"], 0, 0, 0, love.graphics.getWidth() / 800, love.graphics.getHeight() / 600)
+        love.graphics.setColor(1,1,1,1)
     elseif game.state == GAME_STATE.bliss then
         love.graphics.setColor(0.2,0.2,0.2,0.5)
         love.graphics.draw(assets["img/background3.png"], -1500 - player.camera.x / 4 + bliss.bgOffset, -1500 - player.camera.y / 4 + bliss.bgOffset)

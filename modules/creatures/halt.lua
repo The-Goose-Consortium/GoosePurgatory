@@ -1,7 +1,7 @@
 local halt = {}
 
 function halt:init()
-    self.active = true
+    self.active = false
     self.visible = false
     self.timer = 0
     self.activateTime = 1
