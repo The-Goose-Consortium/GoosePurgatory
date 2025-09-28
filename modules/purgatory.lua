@@ -86,6 +86,8 @@ function purgatory:start(world)
 
 
     self.screen:addelements({self.timer, self.breadCounter, self.health, self.floor})
+
+    self.bgOffset = 0
     
     for i = 1, 30 do
         local x, y, w, h
@@ -154,24 +156,37 @@ function purgatory:update(dt, player)
             bread.collected = true
         end
     end
+
+    self.bgOffset = self.bgOffset + dt * 60
+    if self.bgOffset >= 400 then
+        self.bgOffset = 0
+    end
 end
 
 function purgatory:draw(cx, cy)
     love.graphics.setBackgroundColor(0,0,0,1)
 
     for _, platform in ipairs(self.platforms) do
-        love.graphics.setColor(1, 1 + -platform.lava, 1 + -platform.lava, 1)
+        if platform.canLava then
+            love.graphics.setColor(0.15, (1 + -platform.lava) * 0.15, (1 + -platform.lava) * 0.15, 1)
+        
+            love.graphics.rectangle("fill", 
+                platform.pos.x - cx + 25, 
+                platform.pos.y - cy + 25, 
+                platform.size.x, platform.size.y
+            )
+
+            love.graphics.setColor(1, 1 + -platform.lava, 1 + -platform.lava, 1)
+
+            love.graphics.rectangle("line", 
+                platform.pos.x - cx + 25, 
+                platform.pos.y - cy + 25, 
+                platform.size.x, platform.size.y
+            )
+        end
         
 
-        love.graphics.draw(assets["img/platform.png"], platform.pos.x - cx + 25, 
-            platform.pos.y - cy + 25, 0,
-            platform.size.x / 100, platform.size.y / 100)
-
-        love.graphics.rectangle("line", 
-            platform.pos.x - cx + 25, 
-            platform.pos.y - cy + 25, 
-            platform.size.x, platform.size.y
-        )
+       
 
         love.graphics.setColor(1,1,1,1)
     end

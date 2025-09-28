@@ -2,6 +2,7 @@ local bliss = {}
 
 function bliss:start()
     self.gooseSin = 0
+    self.bgOffset = 0
     self.screen = screen:new()
     self.selection = false
     self.selected = false
@@ -33,6 +34,11 @@ function bliss:start()
 end
 
 function bliss:update(dt)
+    self.bgOffset = self.bgOffset + dt * 60
+    if self.bgOffset >= 400 then
+        self.bgOffset = 0
+    end
+
     self.gooseSin = self.gooseSin + dt * 3
 
     self.screen:update()

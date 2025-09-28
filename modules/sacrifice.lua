@@ -126,6 +126,8 @@ function sacrifice:start()
     self.selection = -1
     self.selected = false
 
+    self.bgOffset = 0
+
     local option1
     local option2
     
@@ -192,6 +194,11 @@ function sacrifice:start()
 end
 
 function sacrifice:update(dt)
+    self.bgOffset = self.bgOffset + dt * 60
+    if self.bgOffset >= 400 then
+        self.bgOffset = 0
+    end
+
     self.modX = self.modX + dt * 50
     self.modY = self.modY + dt * 50
     self.modR = self.modR + dt * 20

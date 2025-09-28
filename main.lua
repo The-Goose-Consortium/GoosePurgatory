@@ -40,10 +40,6 @@ function love.load()
     end
 
     world = love.physics.newWorld(0, 2000, true)
-    
-    assets["img/background.png"]:setWrap("repeat", "repeat")
-    assets["img/background3.png"]:setWrap("repeat", "repeat")
-    bgQuad = love.graphics.newQuad(0, 0, 200000, 200000, 400, 400)
 
     player:Init(world)
 end
@@ -199,13 +195,21 @@ function love.draw()
     if game.state == GAME_STATE.transition then
         love.graphics.setBackgroundColor(0,0,0,1)
     elseif game.state == GAME_STATE.purgatory then
+        local redness = math.clamp(game.floor, 0, 9) * 0.1 + 0.1
+
         love.graphics.setColor(1,1,1,1)
-        love.graphics.draw(assets["img/background.png"], bgQuad, -100000 - player.camera.x / 2, -100000 - player.camera.y / 2)
-        love.graphics.setColor(0.2,0.2,0.2,0.5)
-        love.graphics.draw(assets["img/background3.png"], bgQuad, -100000 - player.camera.x / 4 + game.timer * 50, -100000 - player.camera.y / 4 + game.timer * 50)
-        love.graphics.setColor(0.2,0.2,0.2,0.5)
-        love.graphics.draw(assets["img/background3.png"], bgQuad, -99888 - player.camera.x / 4 - game.timer * 50, -99988 - player.camera.y / 4 - game.timer * 50)
+        love.graphics.draw(assets["img/background.png"], -1500 - player.camera.x / 2, -1500 - player.camera.y / 2)
+        love.graphics.setColor(redness,0.2,0.2,0.5)
+        love.graphics.draw(assets["img/background3.png"], -1500 - player.camera.x / 4 + purgatory.bgOffset, -1500 - player.camera.y / 4 + purgatory.bgOffset)
+        love.graphics.setColor(redness,0.2,0.2,0.5)
+        love.graphics.draw(assets["img/background3.png"], -1488 - player.camera.x / 4 - purgatory.bgOffset, -1488 - player.camera.y / 4 - purgatory.bgOffset)
         love.graphics.setColor(1,1,1,1)
+
+        love.graphics.draw(assets["img/fence.png"], -900 - player.camera.x / 3, 700 - player.camera.y + 25)
+        love.graphics.draw(assets["img/fence.png"], -900 - player.camera.x / 3, -700 - player.camera.y - 75)
+
+        love.graphics.draw(assets["img/fence.png"], -1500 - player.camera.x + 25, -1400 - player.camera.y / 3 + 25, math.rad(90))
+        love.graphics.draw(assets["img/fence.png"], 1500 - player.camera.x + 125, -1400 - player.camera.y / 3 + 25, math.rad(90))
         player:Draw()
         
         purgatory:draw(player.camera.x, player.camera.y)
@@ -217,14 +221,14 @@ function love.draw()
         purgatory.screen:draw()
     elseif game.state == GAME_STATE.bliss then
         love.graphics.setColor(0.2,0.2,0.2,0.5)
-        love.graphics.draw(assets["img/background3.png"], bgQuad, -99888 / 4 - game.timer * 50, -99588 / 4 - game.timer * 50)
-        love.graphics.draw(assets["img/background3.png"], bgQuad, -99588 / 4 + game.timer * 50, -99588 / 4 + game.timer * 50)
+        love.graphics.draw(assets["img/background3.png"], -1500 - player.camera.x / 4 + bliss.bgOffset, -1500 - player.camera.y / 4 + bliss.bgOffset)
+        love.graphics.draw(assets["img/background3.png"], -1488 - player.camera.x / 4 - bliss.bgOffset, -1488 - player.camera.y / 4 - bliss.bgOffset)
         love.graphics.setColor(1,1,1,1)
         bliss:draw()
     elseif game.state == GAME_STATE.sacrifice then
         love.graphics.setColor(0.7,0.2,0.2,0.3)
-        love.graphics.draw(assets["img/background3.png"], bgQuad, -99888 / 4 - game.timer * 50, -99588 / 4 - game.timer * 50)
-        love.graphics.draw(assets["img/background3.png"], bgQuad, -99588 / 4 + game.timer * 50, -99588 / 4 + game.timer * 50)
+        love.graphics.draw(assets["img/background3.png"], -1500 - player.camera.x / 4 + sacrifice.bgOffset, -1500 - player.camera.y / 4 + sacrifice.bgOffset)
+        love.graphics.draw(assets["img/background3.png"], -1488 - player.camera.x / 4 - sacrifice.bgOffset, -1488 - player.camera.y / 4 - sacrifice.bgOffset)
         love.graphics.setColor(1,1,1,1)
         sacrifice:draw()
     elseif game.state == GAME_STATE.freedom then
