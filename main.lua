@@ -35,6 +35,7 @@ local game = {
 function love.load()
     love.window.setMode(800, 600, {resizable = true})
     biribiri:LoadSprites("img")
+    biribiri:LoadAudio("audio", "static")
     for _, creature in pairs(game.creatures) do
         creature:init()
     end
@@ -138,7 +139,7 @@ function love.update(dt)
             creature:update(dt, player, purgatory)
         end
 
-        if purgatory:getRemainingBread() <= 18 then
+        if purgatory:getRemainingBread() <= 0 then
             game.state = GAME_STATE.transition
             game.timer = 1
             game.transitionTarget = GAME_STATE.bliss
@@ -154,6 +155,7 @@ function love.update(dt)
         bliss:update(dt)
         game.timer = game.timer - dt
         if bliss.selected then
+            assets["audio/select.wav"]:play()
             if bliss.selection then
                 game.state = GAME_STATE.transition
                 game.timer = 0.1
@@ -170,6 +172,8 @@ function love.update(dt)
         sacrifice:update(dt)
         game.timer = game.timer - dt
         if sacrifice.selected then
+            assets["audio/select.wav"]:play()
+
             local selectedSacrifice = sacrifice.sacrifices[sacrifice.selection]
             
             selectedSacrifice.run(player, game)
@@ -187,6 +191,7 @@ function love.update(dt)
         freedom:update(dt)
 
         if freedom.selected then
+            assets["audio/select.wav"]:play()
             if freedom.selection then
                 reset()
             else
@@ -199,6 +204,7 @@ function love.update(dt)
         damnation:update(dt)
 
         if damnation.selected then
+            assets["audio/select.wav"]:play()
             if damnation.selection then
                 reset()
             else

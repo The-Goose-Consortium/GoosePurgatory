@@ -61,6 +61,7 @@ local DASH_DIRECTIONS = {
 
 function player:Update(dt)
     if self.health ~= self.lastDmg then
+        assets["audio/death.wav"]:play()
         self.dmgOverlay = 1.0
     end
 
@@ -100,6 +101,7 @@ function player:Update(dt)
     end
 
     if love.keyboard.isDown("lshift") and self.dashCooldown <= 0 then
+       
         local dashDir = {x = 0, y = 0}
 
         for key, value in pairs(DASH_DIRECTIONS) do
@@ -116,6 +118,7 @@ function player:Update(dt)
         end
 
         if dashDir.x ~= 0 or dashDir.y ~= 0 then
+             assets["audio/dash.wav"]:play()
             self.dashFrameTimer = 0.3
             self.body:applyLinearImpulse(dashDir.x * self.dashSpeed, dashDir.y * self.dashSpeed * 3)
             self.dashCooldown = self.maxDashCooldown

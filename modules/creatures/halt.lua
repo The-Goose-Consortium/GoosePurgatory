@@ -1,7 +1,7 @@
 local halt = {}
 
 function halt:init()
-    self.active = false
+    self.active = true
     self.visible = false
     self.timer = 0
     self.activateTime = 1
@@ -23,6 +23,9 @@ function halt:update(dt, player)
     self.mod = self.mod + dt * 10
 
     if self.timer >= self.activateTime then
+        if not self.visible then
+            assets["audio/halt.wav"]:play()
+        end
         self.visible = true
         
         self.x = player.body:getX() + math.sin(self.mod) * self.pressingTime * 60
@@ -32,12 +35,16 @@ function halt:update(dt, player)
             self.pressingTime = self.pressingTime + dt
         end
 
+        assets["audio/halt.wav"]:setVolume(self.pressingTime)
+
         if self.pressingTime >= 1 then
             player.health = player.health - 50
             self.timer = 10000
+            assets["audio/halt.wav"]:stop()
         end
 
         if self.timer >= self.activateTime + 3 then
+            assets["audio/halt.wav"]:stop()
             self.visible = false
             self.timer = 0
             self.activateTime = love.math.random(self.minActivate, self.maxActivate)

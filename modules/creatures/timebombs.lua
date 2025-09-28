@@ -22,6 +22,9 @@ function timebombs:init()
     self.frame = 1
     self.frameTimer = 0
     self.exploding = false
+
+    self.tickTime = 0.5
+    self.tickTimer = 1.0
 end
 
 function timebombs:update(dt, player, purgatory)
@@ -44,15 +47,27 @@ function timebombs:update(dt, player, purgatory)
         end
     end
 
+    if self.timer >= self.activateTime then
+        self.tickTimer = self.tickTimer + dt
+
+        if self.tickTimer >= self.tickTime then
+            self.tickTime = self.tickTime * 0.885
+            self.tickTimer = 0
+            assets["audio/tick.wav"]:clone():play()
+        end
+    end
+
     if self.timer >= self.activateTime + 3 then
         self.exploding = true
+        assets["audio/explosion.wav"]:play()
         for _, bomb in ipairs(self.bombs) do
             if biribiri.distance(bomb.x, bomb.y, player.body:getX(), player.body:getY()) < self.radius then
                 player.health = player.health - 50
             end
         end
 
-        
+        self.tickTime = 0.5
+        self.tickTimer = 1.0
         self.timer = 0
         self.activateTime = love.math.random(8, 14)
         self.bombsCreated = false
@@ -80,6 +95,8 @@ function timebombs:reset()
     table.clear(self.bombs)
     self.timer = 0
     self.activateTime = 10
+    self.tickTime = 0.5
+    self.tickTimer = 1.0
 end
 
 function timebombs:draw(cx, cy)

@@ -188,7 +188,8 @@ end
 
 function purgatory:update(dt, player)
     for _, bread in ipairs(self.bread) do
-        if biribiri.collision(player.body:getX() - 35, player.body:getY() - 35, 70, 70, bread.x, bread.y, 50, 50) then
+        if biribiri.collision(player.body:getX() - 35, player.body:getY() - 35, 70, 70, bread.x, bread.y, 50, 50) and not bread.collected then
+            assets["audio/pickupBread.wav"]:clone():play()
             bread.collected = true
         end
 
