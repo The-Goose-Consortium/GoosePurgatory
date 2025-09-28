@@ -20,7 +20,7 @@ local GAME_STATE = {
 
 local game = {
     floor = 0,
-    timer = 1,
+    timer = 2.4,
     maxTime = 50,
     state = GAME_STATE.transition,
     transitionTarget = GAME_STATE.purgatory,
@@ -44,11 +44,12 @@ function love.load()
     world = love.physics.newWorld(0, 2000, true)
 
     player:Init(world)
+    assets["audio/transition.mp3"]:play()
 end
 
 function reset()
     game.floor = 0
-    game.timer = 3
+    game.timer = 2.4
     game.maxTime = 50
 
     for name, creature in pairs(game.creatures) do
@@ -71,7 +72,7 @@ function reset()
     game.currentTutorial = "A/D -> RUN \nSPACE -> JUMP/WALL JUMP\nSHIFT -> DASH"
     game.state = GAME_STATE.transition
     game.transitionTarget = GAME_STATE.purgatory
-    
+    assets["audio/transition.mp3"]:play()
 end
 
 function love.update(dt)
@@ -101,8 +102,16 @@ function love.update(dt)
                 sacrifice:start()
             end
 
-            if game.state == GAME_STATE.freedom then freedom:start(game.floor) end
-            if game.state == GAME_STATE.damnation then damnation:start(game.floor) end
+            if game.state == GAME_STATE.freedom then 
+                freedom:start(game.floor) 
+                assets["audio/bliss.mp3"]:stop()
+                assets["audio/freedom.mp3"]:play() 
+            end
+            if game.state == GAME_STATE.damnation then 
+                
+                damnation:start(game.floor) 
+                
+            end
         end
     end
 
@@ -144,13 +153,17 @@ function love.update(dt)
         if purgatory:getRemainingBread() <= 18 then
             game.currentTutorial = ""
             game.state = GAME_STATE.transition
-            game.timer = 1
+            game.timer = 2.4
             game.transitionTarget = GAME_STATE.bliss
+            assets["audio/purgatory2.mp3"]:stop()
+            assets["audio/transition.mp3"]:play()
         end
 
         if player.health <= 0 then
             damnation:start(game.floor, player.body:getX() - player.camera.x, player.body:getY() - player.camera.y)
             game.state = GAME_STATE.damnation
+            assets["audio/purgatory2.mp3"]:stop() 
+            assets["audio/damnation.mp3"]:play() 
         end
     end
 
@@ -183,9 +196,10 @@ function love.update(dt)
             if selectedSacrifice.reactivatable == false then
                 selectedSacrifice.activated = true
             end
-
+            assets["audio/bliss.mp3"]:stop()
+            assets["audio/transition.mp3"]:play()
             game.state = GAME_STATE.transition
-            game.timer = 3
+            game.timer = 2.4
             game.transitionTarget = GAME_STATE.purgatory
         end
     end
@@ -250,6 +264,7 @@ function love.draw()
         love.graphics.draw(assets["img/damage_overlay.png"], 0, 0, 0, love.graphics.getWidth() / 800, love.graphics.getHeight() / 600)
         love.graphics.setColor(1,1,1,1)
     elseif game.state == GAME_STATE.bliss then
+        assets["audio/bliss.mp3"]:play()
         love.graphics.setColor(0.2,0.2,0.2,0.5)
         love.graphics.draw(assets["img/background3.png"], -1500 - player.camera.x / 4 + bliss.bgOffset, -1500 - player.camera.y / 4 + bliss.bgOffset)
         love.graphics.draw(assets["img/background3.png"], -1488 - player.camera.x / 4 - bliss.bgOffset, -1488 - player.camera.y / 4 - bliss.bgOffset)
@@ -262,6 +277,7 @@ function love.draw()
         love.graphics.setColor(1,1,1,1)
         sacrifice:draw()
     elseif game.state == GAME_STATE.freedom then
+        
         freedom:draw()
     elseif game.state == GAME_STATE.damnation then
         damnation:draw()

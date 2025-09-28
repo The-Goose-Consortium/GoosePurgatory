@@ -45,6 +45,9 @@ function purgatory:generate(world, root)
 end
 
 function purgatory:start(world)
+    assets["audio/purgatory2.mp3"]:setLooping(true)
+    assets["audio/purgatory2.mp3"]:play()
+
     if self.platforms ~= nil then
         for _, platform in ipairs(self.platforms) do
             platform.fixture:destroy()
