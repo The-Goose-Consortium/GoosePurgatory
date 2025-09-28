@@ -2,41 +2,41 @@
 local sacrifice = {}
 
 sacrifice.sacrifices = {
-    -- {
-    --     id = "time",
-    --     text = "lower your time by 20%.",
-    --     run = function (player, game)
-    --         game.maxTime = game.maxTime * 0.8
-    --     end
-    -- },
-    -- {
-    --     id = "speed",
-    --     text = "lower your speed by 10%.",
-    --     run = function (player, game)
-    --         player.speed = player.speed * 0.9
-    --     end
-    -- },
-    -- {
-    --     id = "dash",
-    --     text = "increase your dash cooldown by 20%.",
-    --     run = function (player, game)
-    --         player.maxDashCooldown = player.maxDashCooldown * 1.2
-    --     end
-    -- },
-    -- {
-    --     id = "jumpheight",
-    --     text = "lower your jump height by 10%.",
-    --     run = function (player, game)
-    --         player.jumpHeight = player.jumpHeight * 0.9
-    --     end
-    -- },
-    -- {
-    --     id = "dashspeed",
-    --     text = "lower your dash speed by 10%.",
-    --     run = function (player, game)
-    --         player.dashSpeed = player.dashSpeed * 0.9
-    --     end
-    -- },
+    {
+        id = "time",
+        text = "lower your time by 20%.",
+        run = function (player, game)
+            game.maxTime = game.maxTime * 0.8
+        end
+    },
+    {
+        id = "speed",
+        text = "lower your speed by 10%.",
+        run = function (player, game)
+            player.speed = player.speed * 0.9
+        end
+    },
+    {
+        id = "dash",
+        text = "increase your dash cooldown by 20%.",
+        run = function (player, game)
+            player.maxDashCooldown = player.maxDashCooldown * 1.2
+        end
+    },
+    {
+        id = "jumpheight",
+        text = "lower your jump height by 10%.",
+        run = function (player, game)
+            player.jumpHeight = player.jumpHeight * 0.9
+        end
+    },
+    {
+        id = "dashspeed",
+        text = "lower your dash speed by 10%.",
+        run = function (player, game)
+            player.dashSpeed = player.dashSpeed * 0.9
+        end
+    },
     {
         id = "health",
         text = "lower your health by 10%.",

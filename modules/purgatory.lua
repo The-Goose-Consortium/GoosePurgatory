@@ -161,11 +161,18 @@ function purgatory:draw(cx, cy)
 
     for _, platform in ipairs(self.platforms) do
         love.graphics.setColor(1, 1 + -platform.lava, 1 + -platform.lava, 1)
-        love.graphics.rectangle("fill", 
+        
+
+        love.graphics.draw(assets["img/platform.png"], platform.pos.x - cx + 25, 
+            platform.pos.y - cy + 25, 0,
+            platform.size.x / 100, platform.size.y / 100)
+
+        love.graphics.rectangle("line", 
             platform.pos.x - cx + 25, 
             platform.pos.y - cy + 25, 
             platform.size.x, platform.size.y
         )
+
         love.graphics.setColor(1,1,1,1)
     end
 

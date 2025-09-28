@@ -27,7 +27,7 @@ function textlabel:new(text, textsize, halign, valign)
     object.textsize = textsize
     object.halign = halign
     object.valign = valign
-    object._font = love.graphics.newFont(object.textsize)
+    object._font = love.graphics.newFont("FORCEDSQUARE.ttf", object.textsize)
     
     object.textcolor = Color.new(0,0,0,1)
     

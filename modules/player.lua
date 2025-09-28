@@ -28,7 +28,25 @@ function player:Init(world)
     self.dashCooldown = 0
     self.maxDashCooldown = 1
 
-    self.sprite = assets["img/player.png"]
+    self.spritesheet = assets["img/goose.png"]
+    self.quads = {}
+
+    self.running = false
+    self.dashing = -1
+
+    local w, h = 51, 50
+
+    for y = 0, self.spritesheet:getHeight() - h, h do
+        for x = 0, self.spritesheet:getWidth(), w do
+            table.insert(self.quads, love.graphics.newQuad(x, y, w, h, self.spritesheet:getDimensions()))
+        end
+    end
+
+    self.frame = 1
+    self.runningFrame = 1
+
+    self.runFrameTimer = 0
+    self.dashFrameTimer = 0
 end
 
 local DASH_DIRECTIONS = {
@@ -48,11 +66,17 @@ function player:Update(dt)
     if love.keyboard.isDown("a") then
         self.body:applyLinearImpulse(-self.speed * dt, 0)
         self.flipped = false
+         self.running = true
     end
 
     if love.keyboard.isDown("d") then
         self.body:applyLinearImpulse(self.speed * dt, 0)
         self.flipped = true
+        self.running = true
+    end
+
+    if not love.keyboard.isDown("a") and not love.keyboard.isDown("d") then
+        self.running = false
     end
 
     if love.keyboard.isDown("space") and self.grounded and not self.jumpPressed then
@@ -78,7 +102,14 @@ function player:Update(dt)
             end
         end
 
+        if dashDir.x == 0 and dashDir.y ~= 0 then
+            self.dashing = 1
+        elseif dashDir.y == 0 and dashDir.x ~= 0 then
+            self.dashing = 2
+        end
+
         if dashDir.x ~= 0 or dashDir.y ~= 0 then
+            self.dashFrameTimer = 0.3
             self.body:applyLinearImpulse(dashDir.x * self.dashSpeed, dashDir.y * self.dashSpeed * 3)
             self.dashCooldown = self.maxDashCooldown
         end
@@ -92,6 +123,34 @@ function player:Update(dt)
 
     self.camera.x = self.c.x - self.camoffset.x
     self.camera.y = self.c.y - self.camoffset.y
+
+    if self.dashing == 1 then
+        self.frame = 10
+    elseif self.dashing == 2 then
+        self.frame = 9
+    elseif self.running then
+        self.runFrameTimer = self.runFrameTimer + dt
+
+        if self.runFrameTimer >= 0.1 then
+            self.runFrameTimer = 0
+
+            self.runningFrame = self.runningFrame + 1
+            if self.runningFrame == 8 then
+                self.runningFrame = 1
+            end
+        end
+        
+
+        self.frame = self.runningFrame
+    else
+        self.frame = 8
+    end
+
+    self.dashFrameTimer = self.dashFrameTimer - dt
+
+    if self.dashFrameTimer <= 0 then
+        self.dashing = -1
+    end
 end
 
 function player:reset()
@@ -102,7 +161,7 @@ function player:reset()
 end
 
 function player:Draw()
-    love.graphics.draw(self.sprite, self.body:getX() + 25 - self.camera.x, self.body:getY() + 25 - self.camera.y, 0, self.flipped and -1 or 1, 1, 25, 25)
+    love.graphics.draw(self.spritesheet, self.quads[self.frame], self.body:getX() + 25 - self.camera.x, self.body:getY() + 25 - self.camera.y, 0, self.flipped and -1 or 1, 1, 25, 25)
 end
 
 return player
